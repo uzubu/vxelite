@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VX Elite — Transporte Executivo & Logística</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --black: #080808;
+  --off-black: #0e0e0e;
+  --surface: #141414;
+  --surface2: #1c1c1c;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.1);
+  --gold: #c9a55a;
+  --gold-light: #e8c97a;
+  --gold-dim: rgba(201,165,90,0.15);
+  --text: #f0ede8;
+  --muted: #888;
+  --muted2: #555;
+  --serif: 'Cormorant Garamond', serif;
+  --sans: 'Outfit', sans-serif;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 60px;
+  background: linear-gradient(to bottom, rgba(8,8,8,0.95) 0%, transparent 100%);
+  transition: background 0.3s;
+}
+nav.scrolled {
+  background: rgba(8,8,8,0.97);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 60px;
+}
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--gold); }
+.nav-links {
+  display: flex; align-items: center; gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--gold) !important;
+  border: 1px solid var(--gold);
+  padding: 10px 24px;
+  border-radius: 2px;
+  transition: all 0.3s !important;
+}
+.nav-cta:hover {
+  background: var(--gold) !important;
+  color: var(--black) !important;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(105deg, rgba(8,8,8,0.97) 0%, rgba(8,8,8,0.82) 40%, rgba(8,8,8,0.6) 70%, rgba(8,8,8,0.4) 100%),
+    url('https://images.unsplash.com/photo-1563720223185-11003d516935?w=1600&q=80') center/cover no-repeat;
+}
+.hero-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(201,165,90,0.05) 0%, transparent 60%);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  padding: 0 60px;
+  max-width: 760px;
+}
+.hero-pretitle {
+  display: flex; align-items: center; gap: 14px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero-pretitle::before {
+  content: '';
+  display: block; width: 40px; height: 1px;
+  background: var(--gold);
+}
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(56px, 6vw, 88px);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+.hero-sub {
+  font-size: 16px;
+  font-weight: 300;
+  color: rgba(240,237,232,0.6);
+  line-height: 1.7;
+  max-width: 460px;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+.hero-actions {
+  display: flex; gap: 16px; align-items: center;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 16px 36px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.btn-primary:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(201,165,90,0.3);
+}
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: transparent;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 16px 36px;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.btn-ghost:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.hero-stats {
+  position: absolute; bottom: 60px; right: 60px;
+  display: flex; gap: 48px;
+  opacity: 0;
+  animation: fadeUp 0.8s 1s forwards;
+}
+.hero-stat { text-align: right; }
+.hero-stat-num {
+  font-family: var(--serif);
+  font-size: 40px;
+  font-weight: 300;
+  color: var(--gold-light);
+  line-height: 1;
+}
+.hero-stat-label {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.hero-scroll {
+  position: absolute; bottom: 60px; left: 60px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted2);
+  opacity: 0;
+  animation: fadeUp 0.8s 1.2s forwards;
+}
+.scroll-line {
+  width: 40px; height: 1px;
+  background: linear-gradient(to right, var(--muted2), transparent);
+  position: relative; overflow: hidden;
+}
+.scroll-line::after {
+  content: '';
+  position: absolute; top: 0; left: -40px; width: 40px; height: 1px;
+  background: var(--gold);
+  animation: scrollAnim 2s 1.5s infinite;
+}
+@keyframes scrollAnim { 0% { left: -40px; } 100% { left: 40px; } }
+
+/* ── MARQUEE STRIP ── */
+.marquee-strip {
+  background: var(--gold);
+  padding: 14px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-inner {
+  display: inline-flex;
+  animation: marquee 20s linear infinite;
+}
+.marquee-item {
+  display: inline-flex; align-items: center; gap: 24px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--black);
+  padding: 0 40px;
+}
+.marquee-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: rgba(0,0,0,0.3);
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── SECTION BASE ── */
+section { padding: 120px 60px; }
+.section-label {
+  display: flex; align-items: center; gap: 14px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.section-label::before {
+  content: '';
+  display: block; width: 32px; height: 1px;
+  background: var(--gold);
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(40px, 4vw, 60px);
+  font-weight: 300;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+.section-title em { font-style: italic; color: var(--gold-light); }
+
+/* ── ABOUT ── */
+.about { background: var(--off-black); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.about-image-wrap {
+  position: relative;
+}
+.about-image {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  border-radius: 2px;
+  filter: grayscale(20%);
+}
+.about-badge {
+  position: absolute;
+  bottom: -24px; right: -24px;
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+}
+.about-badge-num {
+  font-family: var(--serif);
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--black);
+  line-height: 1;
+}
+.about-badge-text {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.7);
+  margin-top: 4px;
+}
+.about-text p {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: rgba(240,237,232,0.7);
+  margin-bottom: 20px;
+}
+.about-features {
+  display: flex; flex-direction: column; gap: 16px;
+  margin-top: 40px;
+}
+.about-feature {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  transition: border-color 0.3s;
+}
+.about-feature:hover { border-color: var(--gold); }
+.feature-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  border-radius: 2px;
+  background: var(--gold-dim);
+  border: 1px solid rgba(201,165,90,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold);
+  font-size: 18px;
+}
+.feature-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+.feature-desc { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.5; }
+
+/* ── SERVICES ── */
+.services {
+  background: var(--black);
+  position: relative;
+}
+.services-header {
+  display: flex; align-items: flex-end;
+  justify-content: space-between;
+  max-width: 1200px; margin: 0 auto 64px;
+}
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.service-card {
+  background: var(--surface);
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s;
+  border: 1px solid var(--border);
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+.service-card:hover { background: var(--surface2); }
+.service-card:hover::before { transform: scaleX(1); }
+.service-num {
+  font-family: var(--serif);
+  font-size: 72px;
+  font-weight: 300;
+  color: rgba(201,165,90,0.1);
+  position: absolute;
+  top: 20px; right: 28px;
+  line-height: 1;
+  pointer-events: none;
+  transition: color 0.4s;
+}
+.service-card:hover .service-num { color: rgba(201,165,90,0.2); }
+.service-icon {
+  width: 52px; height: 52px;
+  border-radius: 2px;
+  border: 1px solid rgba(201,165,90,0.25);
+  background: var(--gold-dim);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold);
+  font-size: 22px;
+  margin-bottom: 28px;
+}
+.service-title {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+.service-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.service-list {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.service-list li {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(240,237,232,0.6);
+}
+.service-list li::before {
+  content: '';
+  width: 16px; height: 1px;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+/* ── PROCESS ── */
+.process {
+  background: var(--off-black);
+  position: relative;
+  overflow: hidden;
+}
+.process::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(201,165,90,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.process-inner { max-width: 1200px; margin: 0 auto; }
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-top: 80px;
+  position: relative;
+}
+.process-steps::before {
+  content: '';
+  position: absolute;
+  top: 28px; left: calc(12.5% + 14px); right: calc(12.5% + 14px);
+  height: 1px;
+  background: linear-gradient(to right, var(--border2), var(--gold), var(--border2));
+}
+.process-step {
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  padding: 0 20px;
+}
+.step-num {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  background: var(--off-black);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--gold);
+  margin-bottom: 28px;
+  position: relative; z-index: 1;
+  transition: all 0.3s;
+}
+.process-step:hover .step-num {
+  background: var(--gold);
+  color: var(--black);
+  box-shadow: 0 0 30px rgba(201,165,90,0.4);
+}
+.step-title { font-size: 15px; font-weight: 500; margin-bottom: 10px; }
+.step-desc { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.6; }
+
+/* ── TESTIMONIALS ── */
+.testimonials {
+  background: var(--black);
+}
+.testimonials-inner { max-width: 1200px; margin: 0 auto; }
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 64px;
+}
+.testimonial-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 40px;
+  position: relative;
+  transition: border-color 0.3s;
+}
+.testimonial-card:hover { border-color: rgba(201,165,90,0.3); }
+.testimonial-card::before {
+  content: '"';
+  font-family: var(--serif);
+  font-size: 120px;
+  font-weight: 300;
+  color: rgba(201,165,90,0.08);
+  position: absolute;
+  top: -10px; left: 24px;
+  line-height: 1;
+  pointer-events: none;
+}
+.testimonial-stars {
+  display: flex; gap: 4px;
+  margin-bottom: 20px;
+  color: var(--gold);
+  font-size: 14px;
+}
+.testimonial-text {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(240,237,232,0.75);
+  margin-bottom: 28px;
+  font-style: italic;
+  font-family: var(--serif);
+}
+.testimonial-author { display: flex; align-items: center; gap: 14px; }
+.author-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  border: 1px solid rgba(201,165,90,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gold);
+}
+.author-name { font-size: 14px; font-weight: 500; }
+.author-role { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── FLEET ── */
+.fleet {
+  background: var(--off-black);
+  padding: 120px 0;
+}
+.fleet-header {
+  padding: 0 60px;
+  max-width: 1200px;
+  margin: 0 auto 64px;
+}
+.fleet-scroll {
+  display: flex;
+  gap: 24px;
+  padding: 0 60px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.fleet-scroll::-webkit-scrollbar { display: none; }
+.fleet-card {
+  flex-shrink: 0;
+  width: 340px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.fleet-card:hover { border-color: rgba(201,165,90,0.3); transform: translateY(-4px); }
+.fleet-img {
+  width: 100%; height: 200px;
+  object-fit: cover;
+  filter: grayscale(30%);
+  transition: filter 0.3s;
+}
+.fleet-card:hover .fleet-img { filter: grayscale(0%); }
+.fleet-info { padding: 28px; }
+.fleet-category {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.fleet-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+.fleet-desc { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.6; }
+.fleet-features {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 20px;
+}
+.fleet-tag {
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 1px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+}
+
+/* ── CTA ── */
+.cta-section {
+  padding: 160px 60px;
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+.cta-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+.cta-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative; z-index: 1;
+}
+.cta-pretitle {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 28px;
+}
+.cta-pretitle::before, .cta-pretitle::after {
+  content: '';
+  display: block; width: 40px; height: 1px;
+  background: var(--gold);
+}
+.cta-title {
+  font-family: var(--serif);
+  font-size: clamp(44px, 5vw, 72px);
+  font-weight: 300;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+.cta-title em { font-style: italic; color: var(--gold-light); }
+.cta-sub {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(240,237,232,0.6);
+  line-height: 1.7;
+  margin-bottom: 48px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta-actions { display: flex; justify-content: center; gap: 16px; }
+
+/* ── QUOTE FORM ── */
+.quote-section {
+  background: var(--off-black);
+  padding: 120px 60px;
+}
+.quote-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 100px;
+  align-items: start;
+}
+.quote-info { }
+.quote-info p {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(240,237,232,0.6);
+  line-height: 1.9;
+  margin-bottom: 48px;
+}
+.contact-items { display: flex; flex-direction: column; gap: 24px; }
+.contact-item {
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.contact-icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  border: 1px solid rgba(201,165,90,0.25);
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold);
+  font-size: 18px;
+}
+.contact-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.contact-value { font-size: 15px; font-weight: 400; }
+
+.quote-form { }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.form-group {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.form-group.full { grid-column: 1 / -1; }
+.form-label {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.form-input, .form-select, .form-textarea {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  padding: 14px 18px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--gold);
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--muted2); }
+.form-select option { background: var(--surface); }
+.form-textarea { height: 120px; resize: none; }
+.form-submit {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--surface);
+  padding: 80px 60px 40px;
+  border-top: 1px solid var(--border);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 60px;
+  max-width: 1200px;
+  margin: 0 auto 60px;
+}
+.footer-brand { }
+.footer-logo {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 16px;
+  display: block;
+}
+.footer-logo span { color: var(--gold); }
+.footer-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+.social-links { display: flex; gap: 12px; }
+.social-link {
+  width: 40px; height: 40px;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted);
+  font-size: 16px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.social-link:hover { border-color: var(--gold); color: var(--gold); }
+.footer-col-title {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.footer-links a {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--text); }
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.footer-bottom p {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted2);
+}
+.footer-bottom span { color: var(--gold); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── WHATSAPP FLOAT ── */
+.whatsapp-float {
+  position: fixed;
+  bottom: 32px; right: 32px;
+  z-index: 999;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #25D366;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  text-decoration: none;
+  box-shadow: 0 8px 30px rgba(37,211,102,0.4);
+  transition: transform 0.3s;
+  animation: fadeUp 0.8s 1.4s both;
+}
+.whatsapp-float:hover { transform: scale(1.1); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 20px 28px; }
+  nav.scrolled { padding: 14px 28px; }
+  .nav-links { display: none; }
+  section { padding: 80px 28px; }
+  .hero-content { padding: 0 28px; }
+  .hero-stats { right: 28px; bottom: 40px; gap: 28px; }
+  .hero-scroll { left: 28px; bottom: 40px; }
+  .about-grid, .quote-inner { grid-template-columns: 1fr; gap: 48px; }
+  .about-badge { display: none; }
+  .services-header { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr 1fr; gap: 48px; }
+  .process-steps::before { display: none; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .fleet-section { padding: 80px 0; }
+  .cta-section { padding: 100px 28px; }
+  .quote-section { padding: 80px 28px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: 1; }
+  footer { padding: 60px 28px 32px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">VX<span>Elite</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">Sobre</a></li>
+    <li><a href="#services">Serviços</a></li>
+    <li><a href="#fleet">Frota</a></li>
+    <li><a href="#quote" class="nav-cta">Solicitar Cotação</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-pretitle">Excelência em Mobilidade</div>
+    <h1 class="hero-title">
+      Transporte<br/>
+      <em>Executivo</em> &<br/>
+      Logística Premium
+    </h1>
+    <p class="hero-sub">Soluções de mobilidade corporativa e entregas dedicadas com padrão de luxo, segurança e pontualidade garantida.</p>
+    <div class="hero-actions">
+      <a href="#quote" class="btn-primary">Solicitar Orçamento →</a>
+      <a href="#services" class="btn-ghost">Nossos Serviços</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">12+</div>
+      <div class="hero-stat-label">Anos de mercado</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">3.800</div>
+      <div class="hero-stat-label">Clientes ativos</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">98%</div>
+      <div class="hero-stat-label">Pontualidade</div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <!-- repeated for seamless loop -->
+    <span class="marquee-item">Transporte Executivo <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Entregas Expressas <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Assessoria Turística <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Frete Dedicado <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Motorista Particular <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Transfer Aeroporto <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Logística Corporativa <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Atendimento 24h <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Transporte Executivo <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Entregas Expressas <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Assessoria Turística <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Frete Dedicado <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Motorista Particular <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Transfer Aeroporto <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Logística Corporativa <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Atendimento 24h <span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="about-image-wrap reveal">
+      <img class="about-image"
+        src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80"
+        alt="Motorista executivo profissional"/>
+      <div class="about-badge">
+        <div class="about-badge-num">12</div>
+        <div class="about-badge-text">Anos de<br/>Excelência</div>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <div class="section-label">Sobre Nós</div>
+      <h2 class="section-title">Mobilidade que <em>reflete</em> seu padrão</h2>
+      <p>Somos especialistas em soluções de transporte executivo e logística de alto padrão para empresas e pessoas que valorizam tempo, confiança e discrição.</p>
+      <p>Nossa frota premium, motoristas certificados e tecnologia própria garantem que cada deslocamento seja preciso, seguro e impecável — da primeira à última milha.</p>
+      <div class="about-features">
+        <div class="about-feature">
+          <div class="feature-icon">🛡</div>
+          <div>
+            <div class="feature-title">Segurança & Discrição</div>
+            <div class="feature-desc">Motoristas treinados, monitoramento 24h e sigilo total em cada atendimento.</div>
+          </div>
+        </div>
+        <div class="about-feature">
+          <div class="feature-icon">⏱</div>
+          <div>
+            <div class="feature-title">Pontualidade Garantida</div>
+            <div class="feature-desc">98% de índice de pontualidade com rastreamento em tempo real.</div>
+          </div>
+        </div>
+        <div class="about-feature">
+          <div class="feature-icon">🏆</div>
+          <div>
+            <div class="feature-title">Padrão Premium</div>
+            <div class="feature-desc">Frota de alto padrão, veículos higienizados e experiência de primeiro nível.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-header reveal">
+    <div>
+      <div class="section-label">O que oferecemos</div>
+      <h2 class="section-title">Serviços <em>completos</em><br/>de mobilidade</h2>
+    </div>
+    <a href="#quote" class="btn-ghost">Ver todos →</a>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <div class="service-icon">🚗</div>
+      <h3 class="service-title">Transporte Executivo</h3>
+      <p class="service-desc">Mobilidade corporativa premium para executivos, diretores e clientes VIP com máxima discrição e conforto.</p>
+      <ul class="service-list">
+        <li>Traslados corporativos e para aeroportos</li>
+        <li>Motorista particular mensal</li>
+        <li>Transporte para saúde e reuniões</li>
+        <li>Eventos e recepção de clientes</li>
+      </ul>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">02</div>
+      <div class="service-icon">📦</div>
+      <h3 class="service-title">Entregas Logísticas</h3>
+      <p class="service-desc">Entrega expressa de documentos, materiais corporativos e cargas com rastreamento e segurança garantidos.</p>
+      <ul class="service-list">
+        <li>Documentos e materiais corporativos</li>
+        <li>Entrega expressa e same-day</li>
+        <li>Soluções personalizadas para empresas</li>
+        <li>Frete dedicado e contínuo</li>
+      </ul>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">03</div>
+      <div class="service-icon">🌍</div>
+      <h3 class="service-title">Assessoria Turística</h3>
+      <p class="service-desc">Experiência personalizada para visitantes e executivos com roteiros exclusivos e guias experientes.</p>
+      <ul class="service-list">
+        <li>City tour com guia especializado</li>
+        <li>Roteiros executivos e de negócios</li>
+        <li>Receptivo para grupos e eventos</li>
+        <li>Suporte a viagens internacionais</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="process-inner">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label" style="justify-content:center">Como funciona</div>
+      <h2 class="section-title" style="text-align:center">Simples, rápido e <em>eficiente</em></h2>
+    </div>
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-num">1</div>
+        <div class="step-title">Solicite</div>
+        <div class="step-desc">Envie sua solicitação pelo site, WhatsApp ou telefone com detalhes do serviço.</div>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-num">2</div>
+        <div class="step-title">Cotação</div>
+        <div class="step-desc">Receba em minutos uma proposta personalizada com valores e condições.</div>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-num">3</div>
+        <div class="step-title">Confirmação</div>
+        <div class="step-desc">Aprovado o orçamento, confirmamos o agendamento com motorista designado.</div>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-num">4</div>
+        <div class="step-title">Execução</div>
+        <div class="step-desc">Serviço executado com pontualidade, segurança e suporte em tempo real.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-inner">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label" style="justify-content:center">Depoimentos</div>
+      <h2 class="section-title" style="text-align:center">O que nossos clientes <em>dizem</em></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">Parceria de anos. Confiamos toda a logística executiva da nossa empresa à VX Elite. Pontualidade impecável e motoristas extremamente profissionais.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">R</div>
+          <div>
+            <div class="author-name">Roberto Fonseca</div>
+            <div class="author-role">CEO, Grupo Fonseca</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">Utilizamos para recepcionar clientes internacionais. O nível de serviço é incomparável. Discrição, conforto e eficiência em cada detalhe.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">A</div>
+          <div>
+            <div class="author-name">Ana Carolina Mendes</div>
+            <div class="author-role">Diretora Comercial, TechCorp</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">Para entregas urgentes de documentos confidenciais, a VX Elite é nossa única opção. Segurança e confiabilidade que nenhum outro serviço oferece.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">M</div>
+          <div>
+            <div class="author-name">Marcos Albuquerque</div>
+            <div class="author-role">Sócio, Albuquerque Advogados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLEET -->
+<div class="fleet" id="fleet">
+  <div class="fleet-header reveal">
+    <div class="section-label">Nossa Frota</div>
+    <h2 class="section-title">Veículos de <em>alto padrão</em></h2>
+  </div>
+  <div class="fleet-scroll">
+    <div class="fleet-card reveal">
+      <img class="fleet-img" src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=600&q=80" alt="Sedan Executivo"/>
+      <div class="fleet-info">
+        <div class="fleet-category">Categoria Premium</div>
+        <div class="fleet-name">Sedan Executivo</div>
+        <div class="fleet-desc">BMW Série 5 / Mercedes E-Class. Ideal para executivos e traslados de alto padrão.</div>
+        <div class="fleet-features">
+          <span class="fleet-tag">Wi-Fi</span>
+          <span class="fleet-tag">Água mineral</span>
+          <span class="fleet-tag">Couro premium</span>
+          <span class="fleet-tag">Climatização</span>
+        </div>
+      </div>
+    </div>
+    <div class="fleet-card reveal">
+      <img class="fleet-img" src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&q=80" alt="SUV Executiva"/>
+      <div class="fleet-info">
+        <div class="fleet-category">Categoria Luxo</div>
+        <div class="fleet-name">SUV Executiva</div>
+        <div class="fleet-desc">BMW X5 / Mercedes GLE. Conforto máximo para grupos pequenos e família.</div>
+        <div class="fleet-features">
+          <span class="fleet-tag">Wi-Fi</span>
+          <span class="fleet-tag">7 lugares</span>
+          <span class="fleet-tag">Teto solar</span>
+          <span class="fleet-tag">Som premium</span>
+        </div>
+      </div>
+    </div>
+    <div class="fleet-card reveal">
+      <img class="fleet-img" src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80" alt="Van Executiva"/>
+      <div class="fleet-info">
+        <div class="fleet-category">Categoria Grupos</div>
+        <div class="fleet-name">Van Executiva</div>
+        <div class="fleet-desc">Mercedes Sprinter. Transporte de equipes corporativas com conforto individual.</div>
+        <div class="fleet-features">
+          <span class="fleet-tag">Wi-Fi</span>
+          <span class="fleet-tag">16 lugares</span>
+          <span class="fleet-tag">USB charging</span>
+          <span class="fleet-tag">Ar-condicionado</span>
+        </div>
+      </div>
+    </div>
+    <div class="fleet-card reveal">
+      <img class="fleet-img" src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&q=80" alt="Utilitário Logístico"/>
+      <div class="fleet-info">
+        <div class="fleet-category">Categoria Carga</div>
+        <div class="fleet-name">Utilitário Logístico</div>
+        <div class="fleet-desc">Veículos especializados para entrega de documentos, materiais e cargas corporativas.</div>
+        <div class="fleet-features">
+          <span class="fleet-tag">Rastreamento</span>
+          <span class="fleet-tag">Seguro incluso</span>
+          <span class="fleet-tag">Lacre</span>
+          <span class="fleet-tag">NF eletrônica</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-inner reveal">
+    <div class="cta-pretitle">Pronto para começar?</div>
+    <h2 class="cta-title">Eleve o padrão da<br/>sua <em>mobilidade</em></h2>
+    <p class="cta-sub">Entre em contato agora e descubra como a VX Elite pode transformar o transporte e a logística da sua empresa.</p>
+    <div class="cta-actions">
+      <a href="#quote" class="btn-primary">Solicitar Cotação →</a>
+      <a href="https://wa.me/5521999999999" class="btn-ghost">💬 Falar no WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- QUOTE FORM -->
+<section class="quote-section" id="quote">
+  <div class="quote-inner">
+    <div class="quote-info reveal">
+      <div class="section-label">Contato</div>
+      <h2 class="section-title">Solicite sua <em>cotação</em></h2>
+      <p>Preencha o formulário ou entre em contato diretamente. Nossa equipe responde em até 30 minutos durante o horário comercial.</p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <div class="contact-label">Telefone & WhatsApp</div>
+            <div class="contact-value">(21) 99999-9999</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <div class="contact-label">E-mail</div>
+            <div class="contact-value">contato@vxelite.com.br</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-label">Localização</div>
+            <div class="contact-value">Rio de Janeiro, RJ — Atendimento nacional</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div>
+            <div class="contact-label">Atendimento</div>
+            <div class="contact-value">24h por dia, 7 dias por semana</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quote-form reveal">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Nome completo</label>
+          <input type="text" class="form-input" placeholder="Seu nome"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Empresa</label>
+          <input type="text" class="form-input" placeholder="Nome da empresa"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">WhatsApp</label>
+          <input type="tel" class="form-input" placeholder="(00) 00000-0000"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input type="email" class="form-input" placeholder="seu@email.com"/>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Serviço desejado</label>
+          <select class="form-select">
+            <option value="" disabled selected>Selecione o serviço</option>
+            <option>Transporte Executivo</option>
+            <option>Motorista Particular (mensal)</option>
+            <option>Transfer Aeroporto</option>
+            <option>Entregas Expressas</option>
+            <option>Frete Dedicado</option>
+            <option>Assessoria Turística</option>
+            <option>Outros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Origem</label>
+          <input type="text" class="form-input" placeholder="Ponto de partida"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Destino</label>
+          <input type="text" class="form-input" placeholder="Ponto de chegada"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Data</label>
+          <input type="date" class="form-input"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Horário</label>
+          <input type="time" class="form-input"/>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Observações</label>
+          <textarea class="form-textarea" placeholder="Detalhes adicionais, número de passageiros, necessidades especiais..."></textarea>
+        </div>
+        <div class="form-group form-submit full">
+          <button class="btn-primary" style="width:100%;justify-content:center" onclick="handleSubmit()">
+            Enviar Solicitação →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="footer-logo">VX<span>Elite</span></span>
+      <p class="footer-desc">Excelência em transporte executivo e logística premium. Mobilidade que reflete o seu padrão.</p>
+      <div class="social-links">
+        <a href="#" class="social-link" title="Instagram">in</a>
+        <a href="#" class="social-link" title="LinkedIn">Li</a>
+        <a href="#" class="social-link" title="WhatsApp">W</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Serviços</div>
+      <ul class="footer-links">
+        <li><a href="#">Transporte Executivo</a></li>
+        <li><a href="#">Motorista Particular</a></li>
+        <li><a href="#">Transfer Aeroporto</a></li>
+        <li><a href="#">Entregas Logísticas</a></li>
+        <li><a href="#">Assessoria Turística</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Empresa</div>
+      <ul class="footer-links">
+        <li><a href="#">Sobre Nós</a></li>
+        <li><a href="#">Nossa Frota</a></li>
+        <li><a href="#">Motoristas</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Trabalhe Conosco</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contato</div>
+      <ul class="footer-links">
+        <li><a href="tel:+5521999999999">(21) 99999-9999</a></li>
+        <li><a href="mailto:contato@vxelite.com.br">contato@vxelite.com.br</a></li>
+        <li><a href="#">Rio de Janeiro, RJ</a></li>
+        <li><a href="#">Atendimento 24h</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 <span>VX Elite</span>. Todos os direitos reservados.</p>
+    <p>Feito com atenção ao detalhe no Brasil 🇧🇷</p>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/5521999999999" class="whatsapp-float" target="_blank" title="Fale no WhatsApp">💬</a>
+
+<script>
+// ── NAV SCROLL ──
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── REVEAL ON SCROLL ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => observer.observe(el));
+
+// ── FORM SUBMIT ──
+function handleSubmit() {
+  const btn = document.querySelector('.form-submit .btn-primary');
+  btn.textContent = '✓ Solicitação enviada!';
+  btn.style.background = '#2ecc71';
+  btn.style.color = '#fff';
+  setTimeout(() => {
+    btn.textContent = 'Enviar Solicitação →';
+    btn.style.background = '';
+    btn.style.color = '';
+  }, 3500);
+}
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+</body>
+</html>
